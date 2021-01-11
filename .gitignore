@@ -1,3 +1,5 @@
 ambvir/
 __pycache__/
+.ipynb_checkpoints/
 hotel.db
+debug.log

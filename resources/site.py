@@ -3,14 +3,14 @@ from models.site import SiteModel
 
 class Sites(Resource):
     def get(self):
-        return {'sites': [site.json() for site in SiteModel.query.all()]}
+        return {'sites': [site.json() for site in SiteModel.query.all()]}, 200
 
 
 class Site(Resource):
     def get(self, url):
         site = SiteModel.find_site(url)
         if site:
-            return site.json()
+            return site.json(), 200
         return {'message':'Site not found.'}, 404 #Not Found
 
     def post(self, url):
@@ -22,11 +22,11 @@ class Site(Resource):
             site.save_site()
         except:
             return {"message":"An internal error occurred trying to create a new site."}, 500
-        return     site.json()
+        return site.json(), 200
 
     def delete(self, url):
         site = SiteModel.find_site(url)
         if site:
             site.delete_site()
-            return {'message':'Site deleted.'}
+            return {'message':'Site deleted.'}, 200
         return {'message':'Site not found.'}, 404

@@ -66,7 +66,7 @@ class Hoteis(Resource):
                           'diaria': linha[3],
                           'cidade': linha[4],
                           'site_id': linha[5]})
-        return  {"hoteis":hoteis}
+        return  {"hoteis":hoteis}, 200
 
 
 class Hotel(Resource):
@@ -80,7 +80,7 @@ class Hotel(Resource):
     def get(self, hotel_id):
         hotel = HotelModel.find_hotel(hotel_id)
         if hotel: #similar if hotel is not None
-            return hotel.json()
+            return hotel.json(), 200
         return {'message': 'Hotel not found'}, 404 #not found
 
     @jwt_required
@@ -92,14 +92,14 @@ class Hotel(Resource):
         hotel = HotelModel(hotel_id, **dados)
 
         if not SiteModel.find_by_id(dados.get('site_id')):
-            return {'message':'The hotel must be associated with a valid site id.'}
+            return {'message':'The hotel must be associated with a valid site id.'}, 400
 
         try:
             hotel.save_hotel()
         except:
             return {'message':'An internal error ocurred trying to save hotel.'}, 500 #Internal server error
 
-        return hotel.json()
+        return hotel.json(), 201
 
     @jwt_required
     def put(self, hotel_id):
